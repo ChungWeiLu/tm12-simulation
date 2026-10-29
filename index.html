@@ -7,13 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Inter', sans-serif; user-select: none; }
-        /* 隱藏預設輪廓線 */
         button:focus { outline: none; }
-        /* 固定數字顯示寬度，防止排版跳動 */
-        .val-display { min-width: 75px; text-align: center; font-variant-numeric: tabular-nums; }
+        .val-display { min-width: 65px; text-align: center; font-variant-numeric: tabular-nums; }
     </style>
     
-    <!-- ES Module Import Map for Three.js -->
     <script type="importmap">
         {
             "imports": {
@@ -25,6 +22,8 @@
 </head>
 <body>
 
+    
+
     <!-- Three.js 畫布容器 -->
     <div id="canvas-container" class="absolute top-0 left-0 w-full h-full"></div>
 
@@ -35,81 +34,81 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            東興帆布鋼架 TM12 雙滑台焊接涵蓋模擬系統
-            <span class="bg-blue-600/30 border border-blue-500 text-blue-300 text-xs px-2 py-0.5 rounded font-mono">V1.7</span>
-        </h1>
-        <div class="flex justify-between text-xs text-gray-400 px-1 gap-4">
+                </svg>
+                東興帆布鋼架 TM12 雙滑台焊接涵蓋模擬系統
+                <span class="bg-blue-600/30 border border-blue-500 text-blue-300 text-xs px-2 py-0.5 rounded font-mono">V1.8</span>
+            </h1>
+            <div class="flex gap-4 text-xs text-gray-400">
                 <span>D28 桌體: 6.4m x 1.2m</span>
-                <span id="info-reach">TM12 臂展: 1300 mm</span>
+                <span id="arm-reach-text">TM12 臂展: 1.30m (1300mm)</span>
             </div>
         </div>
         
-        <!-- 五欄控制項 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
+        <!-- 6 欄控制項 (2列x3欄) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <!-- 1. 左軌中心距左桌緣 -->
-            <div class="flex justify-between items-center bg-gray-800 p-2 rounded-lg border border-gray-700">
-                <span class="text-sm font-medium text-blue-400">● 左軌中心距左桌緣</span>
-                <div class="flex items-center gap-2">
-                    <button id="l-off-minus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">-</button>
-                    <span id="l-off-val" class="val-display font-mono text-gray-200 text-sm">1500 mm</span>
-                    <button id="l-off-plus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">+</button>
+            <div class="flex justify-between items-center bg-gray-800 px-3 py-2 rounded-lg border border-gray-700">
+                <span class="text-xs font-medium text-blue-400">● 左軌中心距左桌緣</span>
+                <div class="flex items-center gap-1">
+                    <button id="l-off-minus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">-</button>
+                    <span id="l-off-val" class="val-display font-mono text-gray-200 text-xs">1500 mm</span>
+                    <button id="l-off-plus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">+</button>
                 </div>
             </div>
 
             <!-- 2. 右軌中心距右桌緣 -->
-            <div class="flex justify-between items-center bg-gray-800 p-2 rounded-lg border border-gray-700">
-                <span class="text-sm font-medium text-orange-400">● 右軌中心距右桌緣</span>
-                <div class="flex items-center gap-2">
-                    <button id="r-off-minus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">-</button>
-                    <span id="r-off-val" class="val-display font-mono text-gray-200 text-sm">1500 mm</span>
-                    <button id="r-off-plus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">+</button>
+            <div class="flex justify-between items-center bg-gray-800 px-3 py-2 rounded-lg border border-gray-700">
+                <span class="text-xs font-medium text-orange-400">● 右軌中心距右桌緣</span>
+                <div class="flex items-center gap-1">
+                    <button id="r-off-minus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">-</button>
+                    <span id="r-off-val" class="val-display font-mono text-gray-200 text-xs">1500 mm</span>
+                    <button id="r-off-plus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">+</button>
                 </div>
             </div>
 
-            <!-- 3. 單支軌道長度 -->
-            <div class="flex justify-between items-center bg-gray-800 p-2 rounded-lg border border-gray-700">
-                <span class="text-sm font-medium text-purple-400">● 軌道總長度 (等長)</span>
-                <div class="flex items-center gap-2">
-                    <button id="len-minus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">-</button>
-                    <span id="len-val" class="val-display font-mono text-gray-200 text-sm">3000 mm</span>
-                    <button id="len-plus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">+</button>
+            <!-- 3. 單軌總長度 -->
+            <div class="flex justify-between items-center bg-gray-800 px-3 py-2 rounded-lg border border-gray-700">
+                <span class="text-xs font-medium text-purple-400">● 軌道總長度 (等長)</span>
+                <div class="flex items-center gap-1">
+                    <button id="len-minus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">-</button>
+                    <span id="len-val" class="val-display font-mono text-gray-200 text-xs">3000 mm</span>
+                    <button id="len-plus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">+</button>
                 </div>
             </div>
 
-            <!-- 4. 端點退縮量 (死區) -->
-            <div class="flex justify-between items-center bg-gray-800 p-2 rounded-lg border border-gray-700">
-                <span class="text-sm font-medium text-yellow-400">● 兩端點死區 (退縮)</span>
-                <div class="flex items-center gap-2">
-                    <button id="dz-minus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">-</button>
-                    <span id="dz-val" class="val-display font-mono text-gray-200 text-sm">100 mm</span>
-                    <button id="dz-plus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">+</button>
+            <!-- 4. 軌道端點死區 -->
+            <div class="flex justify-between items-center bg-gray-800 px-3 py-2 rounded-lg border border-gray-700">
+                <span class="text-xs font-medium text-yellow-400">● 兩端死點區 (退縮)</span>
+                <div class="flex items-center gap-1">
+                    <button id="dz-minus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">-</button>
+                    <span id="dz-val" class="val-display font-mono text-gray-200 text-xs">100 mm</span>
+                    <button id="dz-plus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">+</button>
                 </div>
             </div>
 
-            <!-- 5. 中心至桌邊距離 -->
-            <div class="flex justify-between items-center bg-gray-800 p-2 rounded-lg border border-gray-700">
-                <span class="text-sm font-medium text-green-400">● 軌道中心至桌邊距</span>
-                <div class="flex items-center gap-2">
-                    <button id="dist-minus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">-</button>
-                    <span id="dist-val" class="val-display font-mono text-gray-200 text-sm">150 mm</span>
-                    <button id="dist-plus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">+</button>
+            <!-- 5. 軌道中心至桌邊距 (支援負值) -->
+            <div class="flex justify-between items-center bg-gray-800 px-3 py-2 rounded-lg border border-gray-700">
+                <span class="text-xs font-medium text-green-400">● 軌道中心至桌邊距</span>
+                <div class="flex items-center gap-1">
+                    <button id="dist-minus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">-</button>
+                    <span id="dist-val" class="val-display font-mono text-gray-200 text-xs">100 mm</span>
+                    <button id="dist-plus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">+</button>
                 </div>
             </div>
 
-            <!-- 6. 機械手臂工作範圍 (新增) -->
-            <div class="flex justify-between items-center bg-gray-800 p-2 rounded-lg border border-gray-700">
-                <span class="text-sm font-medium text-pink-400">● 手臂工作範圍(臂展)</span>
-                <div class="flex items-center gap-2">
-                    <button id="reach-minus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">-</button>
-                    <span id="reach-val" class="val-display font-mono text-gray-200 text-sm">1300 mm</span>
-                    <button id="reach-plus" class="w-7 h-7 flex items-center justify-center bg-gray-700 hover:bg-gray-600 active:bg-gray-500 rounded-md text-white font-bold transition">+</button>
+            <!-- 6. 機械手臂工作範圍 (臂展) -->
+            <div class="flex justify-between items-center bg-gray-800 px-3 py-2 rounded-lg border border-gray-700">
+                <span class="text-xs font-medium text-cyan-400">● 手臂工作半徑 (臂展)</span>
+                <div class="flex items-center gap-1">
+                    <button id="reach-minus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">-</button>
+                    <span id="reach-val" class="val-display font-mono text-gray-200 text-xs">1300 mm</span>
+                    <button id="reach-plus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">+</button>
                 </div>
             </div>
         </div>
         
-        <p class="text-center text-xs text-gray-400 mt-4">
-             操作提示：直接在畫面上 <b class="text-white">左右拖曳手臂圓心</b>。空白處可平移(拖曳)與縮放(滾輪)。
+        <p class="text-center text-[11px] text-gray-400 mt-2.5">
+            💡 提示：左桌緣基準點為 X=-3200，右桌緣基準點為 X=+3200。黃色方塊為滑動極限死點。畫面可直接左右拖曳圓心，背景支援平移與平滑縮放。
         </p>
     </div>
 
@@ -117,31 +116,23 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // ==========================================
         // 1. 全局狀態與變數
-        // ==========================================
-        let leftOffset = 1500;
-        let rightOffset = 1500;
-        let trackLength = 3000;
-        let deadZone = 100;
-        let distance = 150;
-        let armReach = 1300; // 新增：手臂工作範圍
+        let leftOffset = 1500;  // 左軌中心距左側桌緣 (mm)
+        let rightOffset = 1500; // 右軌中心距右側桌緣 (mm)
+        let trackLength = 3000; // 兩軌長度 (mm)
+        let deadZone = 100;     // 兩端點死區退縮量 (mm)
+        let distance = 100;     // 軌道中心至桌邊距離 (mm)，預設改為 100，允許負值
+        let armReach = 1300;    // 手臂工作範圍半徑 (mm)
 
-        // 手臂目前的 X 座標 (預設在各軌道的正中央)
         let arm1X = -3200 + 1500; 
-        let arm2X = 3200 - 1500;
+        let arm2X = 3200 - 1500;  
 
-        // ==========================================
-        // 2. 初始化 Three.js 與攝影機
-        // ==========================================
+        // 2. 初始化 Three.js 場景與正交攝影機
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x1a1a1a);
 
-        // 防範 window.innerHeight 為 0 造成的 Infinity Aspect 錯誤
-        const w = Math.max(1, window.innerWidth);
-        const h = Math.max(1, window.innerHeight);
-        const aspect = w / h;
+        const aspect = Math.max(0.1, window.innerWidth / Math.max(1, window.innerHeight));
         const viewSize = 5600; 
         const camera = new THREE.OrthographicCamera(
             -viewSize * aspect / 2, viewSize * aspect / 2,
@@ -153,46 +144,33 @@
         camera.lookAt(0, -2100, 0);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(w, h);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // 使用 OrbitControls 處理平移，禁用原生縮放防暴走
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableRotate = false;
         controls.enablePan = true;
-        controls.enableZoom = false; // 關鍵：停用原生縮放
+        controls.enableZoom = false; // 採用自訂平滑縮放機制
         controls.target.set(0, -2100, 0);
         controls.update();
 
-        // 獨立的安全縮放邏輯 (Wheel Event)
+        // 平滑滾輪縮放邏輯
         renderer.domElement.addEventListener('wheel', (e) => {
             e.preventDefault();
-            
-            // 【V1.5 終極平滑修復】採用自然指數平滑公式
-            // 根據滑鼠滾輪的真實力度 (deltaY) 計算極微小的縮放倍率
-            // 傳統滑鼠一格 deltaY 通常是 100，乘以 -0.0005 代表一次只變動約 5%
-            // 這樣不管是高頻率觸控板還是傳統滑鼠，都能保證絕對絲滑且不暴走
-            const zoomFactor = Math.exp(e.deltaY * -0.0005);
+            const zoomFactor = Math.exp(-e.deltaY * 0.0015);
             camera.zoom *= zoomFactor;
-            
-            // 安全限制縮放區間
             camera.zoom = Math.max(0.3, Math.min(3.5, camera.zoom));
             camera.updateProjectionMatrix();
         }, { passive: false });
 
-        // ==========================================
-        // 3. 建立 3D 物件
-        // ==========================================
-        
-        // --- 桌面 (6400 x 1200) ---
+        // 3. 建立 3D 物件 (桌體、網格)
         const tableGeo = new THREE.PlaneGeometry(6400, 1200);
         const tableMat = new THREE.MeshBasicMaterial({ color: 0x333333 });
         const table = new THREE.Mesh(tableGeo, tableMat);
         table.position.set(0, -600, 0);
         scene.add(table);
 
-        // 桌面邊框與網格 (100mm)
         const gridMat = new THREE.LineBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.4 });
         const gridGeo = new THREE.BufferGeometry();
         const gridPoints = [];
@@ -214,56 +192,49 @@
         edgeLines.position.set(0, -600, 1);
         scene.add(edgeLines);
 
-        // --- 兩條獨立軌道 ---
-        const trackGeo = new THREE.PlaneGeometry(1, 100);
+        // 軌道物件
+        const unitTrackGeo = new THREE.PlaneGeometry(1, 100);
         
-        const leftRailMat = new THREE.MeshBasicMaterial({ color: 0x3a4e69 }); // 藍灰色
-        const leftRail = new THREE.Mesh(trackGeo, leftRailMat);
-        leftRail.position.set(-1600, 0, 2);
-        leftRail.scale.x = trackLength; // 已修復為正確變數名稱
+        const leftRailMat = new THREE.MeshBasicMaterial({ color: 0x3a4e69 });
+        const leftRail = new THREE.Mesh(unitTrackGeo, leftRailMat);
         scene.add(leftRail);
 
-        const rightRailMat = new THREE.MeshBasicMaterial({ color: 0x8c522b }); // 橘棕色
-        const rightRail = new THREE.Mesh(trackGeo, rightRailMat);
-        rightRail.position.set(1600, 0, 2);
-        rightRail.scale.x = trackLength; // 已修復為正確變數名稱
+        const rightRailMat = new THREE.MeshBasicMaterial({ color: 0x8c522b });
+        const rightRail = new THREE.Mesh(unitTrackGeo, rightRailMat);
         scene.add(rightRail);
 
-        // --- 建立死區端點標示 (Stoppers) ---
-        // 寬 16mm，高 140mm (故意比軌道稍微高一點，形成擋塊視覺)
-        const stopperGeo = new THREE.PlaneGeometry(16, 140); 
-        const stopperMat = new THREE.MeshBasicMaterial({ color: 0xf1c40f }); // 黃色，與 UI 控制項顏色呼應
-        const leftStopperL = new THREE.Mesh(stopperGeo, stopperMat);
-        const leftStopperR = new THREE.Mesh(stopperGeo, stopperMat);
-        const rightStopperL = new THREE.Mesh(stopperGeo, stopperMat);
-        const rightStopperR = new THREE.Mesh(stopperGeo, stopperMat);
-        
-        // Z=2.5 確保顯示在軌道(2)之上，手臂(3)之下
-        leftStopperL.position.z = 2.5; leftStopperR.position.z = 2.5;
-        rightStopperL.position.z = 2.5; rightStopperR.position.z = 2.5;
+        // 軌道 4 個黃色死區卡榫標示 (Stoppers)
+        const stopperGeo = new THREE.PlaneGeometry(16, 120);
+        const stopperMat = new THREE.MeshBasicMaterial({ color: 0xffcc00 });
 
-        scene.add(leftStopperL); scene.add(leftStopperR);
-        scene.add(rightStopperL); scene.add(rightStopperR);
+        const stoppers = [
+            new THREE.Mesh(stopperGeo, stopperMat), // 左軌左死點
+            new THREE.Mesh(stopperGeo, stopperMat), // 左軌右死點
+            new THREE.Mesh(stopperGeo, stopperMat), // 右軌左死點
+            new THREE.Mesh(stopperGeo, stopperMat)  // 右軌右死點
+        ];
+        stoppers.forEach(s => {
+            s.position.z = 2.5;
+            scene.add(s);
+        });
 
-        // --- 建立手臂涵蓋範圍與控制圓心 ---
+        // 建立機械手臂物件 (涵蓋範圍支援動態縮放)
         function createArm(colorHex, idName) {
             const group = new THREE.Group();
             
-            // 半徑基礎設為 1，後續統一透過 scale 控制大小
+            // 基礎幾何設為半徑 1，由 scale 動態指派半徑
             const reachGeo = new THREE.CircleGeometry(1, 64);
             const reachMat = new THREE.MeshBasicMaterial({ 
                 color: colorHex, transparent: true, opacity: 0.35, depthWrite: false 
             });
             const reach = new THREE.Mesh(reachGeo, reachMat);
             reach.position.z = 3;
-            reach.scale.set(armReach, armReach, 1);
             group.add(reach);
 
             const borderGeo = new THREE.EdgesGeometry(reachGeo);
             const borderMat = new THREE.LineBasicMaterial({ color: colorHex, opacity: 0.8, transparent: true });
             const border = new THREE.LineSegments(borderGeo, borderMat);
             border.position.z = 3;
-            border.scale.set(armReach, armReach, 1);
             group.add(border);
 
             const handleGeo = new THREE.CircleGeometry(45, 32);
@@ -289,9 +260,7 @@
 
         const interactiveHandles = [leftArm.handle, rightArm.handle];
 
-        // ==========================================
-        // 4. 核心邏輯：更新佈局與物理邊界約束
-        // ==========================================
+        // 4. 更新佈局與邊界約束
         function updateLayout() {
             document.getElementById('l-off-val').innerText = `${leftOffset} mm`;
             document.getElementById('r-off-val').innerText = `${rightOffset} mm`;
@@ -299,63 +268,59 @@
             document.getElementById('dz-val').innerText = `${deadZone} mm`;
             document.getElementById('dist-val').innerText = `${distance} mm`;
             document.getElementById('reach-val').innerText = `${armReach} mm`;
-            document.getElementById('info-reach').innerText = `TM12 臂展: ${armReach} mm`;
+            document.getElementById('arm-reach-text').innerText = `TM12 臂展: ${(armReach / 1000).toFixed(2)}m (${armReach}mm)`;
 
             const railY = -1200 - distance;
-            
+
+            // 桌體座標最左為 -3200，最右為 +3200
             const leftCenterX = -3200 + leftOffset;
             const rightCenterX = 3200 - rightOffset;
 
+            // 更新軌道尺寸與座標
             leftRail.scale.x = trackLength;
             leftRail.position.set(leftCenterX, railY, 2);
 
             rightRail.scale.x = trackLength;
             rightRail.position.set(rightCenterX, railY, 2);
 
-            const leftMin = leftCenterX - (trackLength / 2) + deadZone;
-            const leftMax = leftCenterX + (trackLength / 2) - deadZone;
-            if (leftMin > leftMax) arm1X = leftCenterX; 
-            else arm1X = Math.max(leftMin, Math.min(leftMax, arm1X));
+            // 更新 4 處黃色死區卡榫位置
+            const lStop1X = leftCenterX - (trackLength / 2) + deadZone;
+            const lStop2X = leftCenterX + (trackLength / 2) - deadZone;
+            const rStop1X = rightCenterX - (trackLength / 2) + deadZone;
+            const rStop2X = rightCenterX + (trackLength / 2) - deadZone;
 
-            const rightMin = rightCenterX - (trackLength / 2) + deadZone;
-            const rightMax = rightCenterX + (trackLength / 2) - deadZone;
-            if (rightMin > rightMax) arm2X = rightCenterX;
-            else arm2X = Math.max(rightMin, Math.min(rightMax, arm2X));
+            stoppers[0].position.set(lStop1X, railY, 2.5);
+            stoppers[1].position.set(lStop2X, railY, 2.5);
+            stoppers[2].position.set(rStop1X, railY, 2.5);
+            stoppers[3].position.set(rStop2X, railY, 2.5);
 
-            // --- 更新死區端點標示 (Stoppers) 的實體位置 ---
-            // 標示出滑車 (手臂圓心) 往兩端滑動所能到達的物理極限位置
-            leftStopperL.position.set(leftCenterX - (trackLength / 2) + deadZone, railY, 2.5);
-            leftStopperR.position.set(leftCenterX + (trackLength / 2) - deadZone, railY, 2.5);
-            rightStopperL.position.set(rightCenterX - (trackLength / 2) + deadZone, railY, 2.5);
-            rightStopperR.position.set(rightCenterX + (trackLength / 2) - deadZone, railY, 2.5);
-
-            // 若死區過大導致極限交錯 (沒有滑行空間時)，則自動隱藏標示防止畫面混亂
-            const isLeftValid = leftMin <= leftMax;
-            leftStopperL.visible = isLeftValid;
-            leftStopperR.visible = isLeftValid;
-            
-            const isRightValid = rightMin <= rightMax;
-            rightStopperL.visible = isRightValid;
-            rightStopperR.visible = isRightValid;
-
-            leftArm.group.position.set(arm1X, railY, 0);
-            rightArm.group.position.set(arm2X, railY, 0);
-
-            // 動態縮放手臂涵蓋半徑
+            // 動態更新手臂涵蓋範圍半徑
             leftArm.reach.scale.set(armReach, armReach, 1);
             leftArm.border.scale.set(armReach, armReach, 1);
             rightArm.reach.scale.set(armReach, armReach, 1);
             rightArm.border.scale.set(armReach, armReach, 1);
+
+            // 限制手臂滑動範圍 (含死區退縮量)
+            const leftMin = lStop1X;
+            const leftMax = lStop2X;
+            if (leftMin > leftMax) arm1X = leftCenterX;
+            else arm1X = Math.max(leftMin, Math.min(leftMax, arm1X));
+
+            const rightMin = rStop1X;
+            const rightMax = rStop2X;
+            if (rightMin > rightMax) arm2X = rightCenterX;
+            else arm2X = Math.max(rightMin, Math.min(rightMax, arm2X));
+
+            leftArm.group.position.set(arm1X, railY, 0);
+            rightArm.group.position.set(arm2X, railY, 0);
         }
 
-        // ==========================================
-        // 5. UI 按鈕事件綁定
-        // ==========================================
+        // 5. 控制項按鈕事件綁定
         document.getElementById('l-off-minus').onclick = () => { leftOffset = Math.max(0, leftOffset - 100); updateLayout(); };
-        document.getElementById('l-off-plus').onclick = () => { leftOffset = Math.min(6000, leftOffset + 100); updateLayout(); };
+        document.getElementById('l-off-plus').onclick = () => { leftOffset = Math.min(4000, leftOffset + 100); updateLayout(); };
 
         document.getElementById('r-off-minus').onclick = () => { rightOffset = Math.max(0, rightOffset - 100); updateLayout(); };
-        document.getElementById('r-off-plus').onclick = () => { rightOffset = Math.min(6000, rightOffset + 100); updateLayout(); };
+        document.getElementById('r-off-plus').onclick = () => { rightOffset = Math.min(4000, rightOffset + 100); updateLayout(); };
 
         document.getElementById('len-minus').onclick = () => { trackLength = Math.max(500, trackLength - 100); updateLayout(); };
         document.getElementById('len-plus').onclick = () => { trackLength = Math.min(6000, trackLength + 100); updateLayout(); };
@@ -363,17 +328,17 @@
         document.getElementById('dz-minus').onclick = () => { deadZone = Math.max(0, deadZone - 10); updateLayout(); };
         document.getElementById('dz-plus').onclick = () => { deadZone = Math.min(1000, deadZone + 10); updateLayout(); };
         
-        document.getElementById('dist-minus').onclick = () => { distance = Math.max(0, distance - 10); updateLayout(); };
-        document.getElementById('dist-plus').onclick = () => { distance = Math.min(2000, distance + 10); updateLayout(); };
+        // 軌道中心至桌邊距 (允許負值，下限設為 -1000mm)
+        document.getElementById('dist-minus').onclick = () => { distance = Math.max(-1000, distance - 10); updateLayout(); };
+        document.getElementById('dist-plus').onclick = () => { distance = Math.min(1000, distance + 10); updateLayout(); };
 
-        document.getElementById('reach-minus').onclick = () => { armReach = Math.max(500, armReach - 10); updateLayout(); };
-        document.getElementById('reach-plus').onclick = () => { armReach = Math.min(3000, armReach + 10); updateLayout(); };
+        // 手臂工作半徑 (步進 10mm)
+        document.getElementById('reach-minus').onclick = () => { armReach = Math.max(200, armReach - 10); updateLayout(); };
+        document.getElementById('reach-plus').onclick = () => { armReach = Math.min(2500, armReach + 10); updateLayout(); };
 
         updateLayout();
 
-        // ==========================================
-        // 6. 滑鼠互動 (拖曳邏輯)
-        // ==========================================
+        // 6. 滑鼠拖曳互動邏輯
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
         let draggedArm = null;
@@ -424,19 +389,19 @@
             }
         });
 
-        // ==========================================
-        // 7. 視窗適應與渲染迴圈
-        // ==========================================
+        // 7. 視窗尺寸適應與渲染迴圈
         window.addEventListener('resize', () => {
-            const newW = Math.max(1, window.innerWidth);
-            const newH = Math.max(1, window.innerHeight);
-            const newAspect = newW / newH;
+            const width = Math.max(1, window.innerWidth);
+            const height = Math.max(1, window.innerHeight);
+            const newAspect = width / height;
+
             camera.left = -viewSize * newAspect / 2;
             camera.right = viewSize * newAspect / 2;
             camera.top = viewSize / 2;
             camera.bottom = -viewSize / 2;
             camera.updateProjectionMatrix();
-            renderer.setSize(newW, newH);
+
+            renderer.setSize(width, height);
         });
 
         function animate() {
@@ -445,7 +410,6 @@
             renderer.render(scene, camera);
         }
         animate();
-
     </script>
 </body>
 </html>
