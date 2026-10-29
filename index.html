@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>東興帆布鋼架 TM12 雙滑台焊接涵蓋模擬系統</title>
+    <title>東興帆布鋼架 TM12 雙滑台焊接涵蓋模擬 V1.9</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Inter', sans-serif; user-select: none; }
@@ -22,22 +22,29 @@
 </head>
 <body>
 
-    
-
     <!-- Three.js 畫布容器 -->
     <div id="canvas-container" class="absolute top-0 left-0 w-full h-full"></div>
 
     <!-- UI 控制面板 -->
     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-5xl bg-gray-900/95 backdrop-blur-md border border-gray-700 p-4 rounded-2xl shadow-2xl text-white z-10 pointer-events-auto">
         <div class="flex flex-wrap items-center justify-between border-b border-gray-700 pb-2 mb-3 gap-2">
-            <h1 class="text-base font-bold text-gray-100 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                東興帆布鋼架 TM12 雙滑台焊接涵蓋模擬系統
-                <span class="bg-blue-600/30 border border-blue-500 text-blue-300 text-xs px-2 py-0.5 rounded font-mono">V1.8</span>
-            </h1>
+            <div class="flex items-center gap-3">
+                <h1 class="text-base font-bold text-gray-100 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    東興帆布鋼架 TM12 雙滑台焊接涵蓋模擬系統
+                    <span class="bg-blue-600/30 border border-blue-500 text-blue-300 text-xs px-2 py-0.5 rounded font-mono">V1.9</span>
+                </h1>
+                
+                <!-- 新增：單雙手臂數量切換按鈕 -->
+                <div class="flex bg-gray-800 rounded-lg p-0.5 border border-gray-700 ml-2">
+                    <button id="btn-1-arm" class="px-3 py-1 text-xs rounded-md text-gray-400 hover:text-white transition-colors">1 台</button>
+                    <button id="btn-2-arms" class="px-3 py-1 text-xs rounded-md bg-blue-600 text-white font-bold transition-colors shadow-sm">2 台</button>
+                </div>
+            </div>
+
             <div class="flex gap-4 text-xs text-gray-400">
                 <span>D28 桌體: 6.4m x 1.2m</span>
                 <span id="arm-reach-text">TM12 臂展: 1.30m (1300mm)</span>
@@ -56,8 +63,8 @@
                 </div>
             </div>
 
-            <!-- 2. 右軌中心距右桌緣 -->
-            <div class="flex justify-between items-center bg-gray-800 px-3 py-2 rounded-lg border border-gray-700">
+            <!-- 2. 右軌中心距右桌緣 (加入 ID 以便動態變暗) -->
+            <div id="right-offset-control" class="flex justify-between items-center bg-gray-800 px-3 py-2 rounded-lg border border-gray-700 transition-opacity duration-300">
                 <span class="text-xs font-medium text-orange-400">● 右軌中心距右桌緣</span>
                 <div class="flex items-center gap-1">
                     <button id="r-off-minus" class="w-6 h-6 flex items-center justify-center bg-gray-700 hover:bg-gray-600 rounded text-white font-bold">-</button>
@@ -117,11 +124,13 @@
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
         // 1. 全局狀態與變數
+        let armCount = 2;       // 預設為 2 台手臂
+        
         let leftOffset = 1500;  // 左軌中心距左側桌緣 (mm)
         let rightOffset = 1500; // 右軌中心距右側桌緣 (mm)
         let trackLength = 3000; // 兩軌長度 (mm)
         let deadZone = 100;     // 兩端點死區退縮量 (mm)
-        let distance = 100;     // 軌道中心至桌邊距離 (mm)，預設改為 100，允許負值
+        let distance = 100;     // 軌道中心至桌邊距離 (mm)
         let armReach = 1300;    // 手臂工作範圍半徑 (mm)
 
         let arm1X = -3200 + 1500; 
@@ -222,7 +231,6 @@
         function createArm(colorHex, idName) {
             const group = new THREE.Group();
             
-            // 基礎幾何設為半徑 1，由 scale 動態指派半徑
             const reachGeo = new THREE.CircleGeometry(1, 64);
             const reachMat = new THREE.MeshBasicMaterial({ 
                 color: colorHex, transparent: true, opacity: 0.35, depthWrite: false 
@@ -258,8 +266,6 @@
         scene.add(leftArm.group);
         scene.add(rightArm.group);
 
-        const interactiveHandles = [leftArm.handle, rightArm.handle];
-
         // 4. 更新佈局與邊界約束
         function updateLayout() {
             document.getElementById('l-off-val').innerText = `${leftOffset} mm`;
@@ -271,8 +277,6 @@
             document.getElementById('arm-reach-text').innerText = `TM12 臂展: ${(armReach / 1000).toFixed(2)}m (${armReach}mm)`;
 
             const railY = -1200 - distance;
-
-            // 桌體座標最左為 -3200，最右為 +3200
             const leftCenterX = -3200 + leftOffset;
             const rightCenterX = 3200 - rightOffset;
 
@@ -300,7 +304,7 @@
             rightArm.reach.scale.set(armReach, armReach, 1);
             rightArm.border.scale.set(armReach, armReach, 1);
 
-            // 限制手臂滑動範圍 (含死區退縮量)
+            // 限制手臂滑動範圍
             const leftMin = lStop1X;
             const leftMax = lStop2X;
             if (leftMin > leftMax) arm1X = leftCenterX;
@@ -313,9 +317,48 @@
 
             leftArm.group.position.set(arm1X, railY, 0);
             rightArm.group.position.set(arm2X, railY, 0);
+
+            // ====== 處理單雙手臂顯示隱藏與 UI 防呆 ======
+            const rightControl = document.getElementById('right-offset-control');
+            if (armCount === 1) {
+                rightRail.visible = false;
+                rightArm.group.visible = false;
+                stoppers[2].visible = false; // 隱藏右側死點 1
+                stoppers[3].visible = false; // 隱藏右側死點 2
+                
+                // 控制面板防呆：將右軌距桌緣按鈕變暗且禁止點擊
+                rightControl.style.opacity = '0.3';
+                rightControl.style.pointerEvents = 'none';
+            } else {
+                rightRail.visible = true;
+                rightArm.group.visible = true;
+                stoppers[2].visible = true;
+                stoppers[3].visible = true;
+
+                // 恢復控制面板
+                rightControl.style.opacity = '1';
+                rightControl.style.pointerEvents = 'auto';
+            }
         }
 
         // 5. 控制項按鈕事件綁定
+        const btn1Arm = document.getElementById('btn-1-arm');
+        const btn2Arms = document.getElementById('btn-2-arms');
+
+        btn1Arm.onclick = () => {
+            armCount = 1;
+            btn1Arm.className = "px-3 py-1 text-xs rounded-md bg-blue-600 text-white font-bold transition-colors shadow-sm";
+            btn2Arms.className = "px-3 py-1 text-xs rounded-md text-gray-400 hover:text-white transition-colors";
+            updateLayout();
+        };
+
+        btn2Arms.onclick = () => {
+            armCount = 2;
+            btn2Arms.className = "px-3 py-1 text-xs rounded-md bg-blue-600 text-white font-bold transition-colors shadow-sm";
+            btn1Arm.className = "px-3 py-1 text-xs rounded-md text-gray-400 hover:text-white transition-colors";
+            updateLayout();
+        };
+
         document.getElementById('l-off-minus').onclick = () => { leftOffset = Math.max(0, leftOffset - 100); updateLayout(); };
         document.getElementById('l-off-plus').onclick = () => { leftOffset = Math.min(4000, leftOffset + 100); updateLayout(); };
 
@@ -328,11 +371,9 @@
         document.getElementById('dz-minus').onclick = () => { deadZone = Math.max(0, deadZone - 10); updateLayout(); };
         document.getElementById('dz-plus').onclick = () => { deadZone = Math.min(1000, deadZone + 10); updateLayout(); };
         
-        // 軌道中心至桌邊距 (允許負值，下限設為 -1000mm)
         document.getElementById('dist-minus').onclick = () => { distance = Math.max(-1000, distance - 10); updateLayout(); };
         document.getElementById('dist-plus').onclick = () => { distance = Math.min(1000, distance + 10); updateLayout(); };
 
-        // 手臂工作半徑 (步進 10mm)
         document.getElementById('reach-minus').onclick = () => { armReach = Math.max(200, armReach - 10); updateLayout(); };
         document.getElementById('reach-plus').onclick = () => { armReach = Math.min(2500, armReach + 10); updateLayout(); };
 
@@ -354,7 +395,10 @@
         dom.addEventListener('pointerdown', (e) => {
             getMousePos(e);
             raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(interactiveHandles);
+            
+            // 根據選擇的手臂數量，決定哪些圓心可以被拖曳
+            const activeHandles = armCount === 1 ? [leftArm.handle] : [leftArm.handle, rightArm.handle];
+            const intersects = raycaster.intersectObjects(activeHandles);
             
             if (intersects.length > 0) {
                 draggedArm = intersects[0].object.userData.arm;
@@ -368,7 +412,8 @@
             raycaster.setFromCamera(mouse, camera);
 
             if (!draggedArm) {
-                const intersects = raycaster.intersectObjects(interactiveHandles);
+                const activeHandles = armCount === 1 ? [leftArm.handle] : [leftArm.handle, rightArm.handle];
+                const intersects = raycaster.intersectObjects(activeHandles);
                 dom.style.cursor = intersects.length > 0 ? 'grab' : 'default';
             } else {
                 const worldX = raycaster.ray.origin.x; 
